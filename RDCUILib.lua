@@ -21,11 +21,7 @@ local CoreGui = game:GetService("CoreGui")
 
 -- Global state
 local DrawingObjects = {}
-local Windows = {}
-local ActiveWindow = nil
 local MousePosition = Vector2.new(0, 0)
-local LastMousePosition = Vector2.new(0, 0)
-local DeltaTime = 0
 local FrameCount = 0
 
 -- ImGui class
@@ -1430,42 +1426,31 @@ function Module:CreateModal(title, message, buttons)
 end
 
 -- Main update loop
-local function UpdateUI()
+local function UpdateUI(deltaTime)
     MousePosition = UserInputService:GetMouseLocation()
-    DeltaTime = RunService.Heartbeat:Wait()
     FrameCount = FrameCount + 1
     
     -- Update all interactive elements
     for _, obj in ipairs(DrawingObjects) do
         if obj.Update then
-            obj:Update()
+            obj:Update(deltaTime)
         end
     end
-    
-    LastMousePosition = MousePosition
 end
 
 -- Initialize UI system
 local function Initialize()
     RunService.Heartbeat:Connect(UpdateUI)
-
-local function Cleanup()
-    for _, obj in ipairs(DrawingObjects) do
-        if obj.Remove then
-            obj:Remove()
+    
+    -- Handle cleanup on game shutdown
+    game:BindToClose(function()
+        for _, obj in ipairs(DrawingObjects) do
+            if obj.Remove then
+                obj:Remove()
+            end
         end
-    end
+    end)
 end
-
--- Hook to UI unloading or reset events
-game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui").AncestryChanged:Connect(function()
-    Cleanup()
-end)
-
--- Also add manual cleanup on character removing (optional)
-game:GetService("Players").LocalPlayer.CharacterRemoving:Connect(function()
-    Cleanup()
-end)
 
 -- Export all classes and functions
 RDCUILib.ImGui = ImGui
