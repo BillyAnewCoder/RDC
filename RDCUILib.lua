@@ -1448,8 +1448,7 @@ end
 -- Initialize UI system
 local function Initialize()
     RunService.Heartbeat:Connect(UpdateUI)
-    
-  -- Fallback cleanup for client since BindToClose is server-only
+
 local function Cleanup()
     for _, obj in ipairs(DrawingObjects) do
         if obj.Remove then
