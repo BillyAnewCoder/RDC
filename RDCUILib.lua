@@ -1428,7 +1428,7 @@ end
 -- Main update loop
 local function UpdateUI(delta)
     MousePosition = UserInputService:GetMouseLocation()
-    FrameCount += 1
+    FrameCount = FrameCount + 1
 
     for _, obj in ipairs(DrawingObjects) do
         if obj.Update then
