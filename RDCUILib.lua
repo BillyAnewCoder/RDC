@@ -1511,5 +1511,5 @@ RDCUILib.OldValues = OldValues
 
 -- Initialize the library
 Initialize()
-    
+
 return RDCUILib
