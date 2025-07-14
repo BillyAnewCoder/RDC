@@ -1146,7 +1146,7 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 
 		--// Check for rbxassetid
 		if tonumber(Config.Image) then
-			Config.Image = `rbxassetid://{Config.Image}`
+			Config.Image = "rbxassetid://" .. tostring(Config.Image)
 		end
 
 		local ObjectClass = self:NewInstance(Image, Config)
