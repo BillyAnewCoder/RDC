@@ -1449,15 +1449,24 @@ end
 local function Initialize()
     RunService.Heartbeat:Connect(UpdateUI)
     
-    -- Handle cleanup on game shutdown
-    game:BindToClose(function()
-        for _, obj in ipairs(DrawingObjects) do
-            if obj.Remove then
-                obj:Remove()
-            end
+  -- Fallback cleanup for client since BindToClose is server-only
+local function Cleanup()
+    for _, obj in ipairs(DrawingObjects) do
+        if obj.Remove then
+            obj:Remove()
         end
-    end)
+    end
 end
+
+-- Hook to UI unloading or reset events
+game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui").AncestryChanged:Connect(function()
+    Cleanup()
+end)
+
+-- Also add manual cleanup on character removing (optional)
+game:GetService("Players").LocalPlayer.CharacterRemoving:Connect(function()
+    Cleanup()
+end)
 
 -- Export all classes and functions
 RDCUILib.ImGui = ImGui
@@ -1503,5 +1512,5 @@ RDCUILib.OldValues = OldValues
 
 -- Initialize the library
 Initialize()
-
+    
 return RDCUILib
