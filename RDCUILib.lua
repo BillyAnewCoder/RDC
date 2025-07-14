@@ -120,13 +120,14 @@ function ImGui:CreatePrefabs()
 	CheckBoxLayout.Padding = UDim.new(0, 5)
 	CheckBoxLayout.Parent = CheckBox
 	
-	local Tickbox = Instance.new("ImageButton")
-	Tickbox.Name = "Tickbox"
-	Tickbox.Size = UDim2.new(0, 16, 0, 16)
-	Tickbox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-	Tickbox.BorderSizePixel = 0
-	Tickbox.Text = ""
-	Tickbox.Parent = CheckBox
+	local Tickbox = Instance.new("TextButton")
+        Tickbox.Name = "Tickbox"
+        Tickbox.Size = UDim2.new(0, 16, 0, 16)
+        Tickbox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+        Tickbox.BorderSizePixel = 0
+        Tickbox.Text = ""
+        Tickbox.Parent = CheckBox
+
 	
 	local TickboxCorner = Instance.new("UICorner")
 	TickboxCorner.CornerRadius = UDim.new(0, 2)
