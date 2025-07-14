@@ -2,7 +2,7 @@
     RDCUILib (Roblox Decompiler Core UI Library)
     ImGui-style UI framework for Roblox exploit environments
     Uses Drawing API for performance and compatibility
-    
+
     Features:
     - Dear ImGui visual style
     - Draggable panels and windows
@@ -21,7 +21,6 @@ local CoreGui = game:GetService("CoreGui")
 
 -- Global state
 local DrawingObjects = {}
-local MousePosition = Vector2.new(0, 0)
 local FrameCount = 0
 
 -- ImGui class
@@ -48,9 +47,9 @@ local AdditionalStyles = {}
 AdditionalStyles.__index = AdditionalStyles
 
 function AdditionalStyles.new()
-    local self = setmetatable({}, AdditionalStyles)
-    self.styles = {}
-    return self
+    local obj = setmetatable({}, AdditionalStyles)
+    obj.styles = {}
+    return obj
 end
 
 function AdditionalStyles:SetLabel(label)
@@ -110,9 +109,9 @@ local Metadata = {}
 Metadata.__index = Metadata
 
 function Metadata.new()
-    local self = setmetatable({}, Metadata)
-    self.data = {}
-    return self
+    local obj = setmetatable({}, Metadata)
+    obj.data = {}
+    return obj
 end
 
 function Metadata:__index(key)
@@ -134,12 +133,12 @@ local ContainerClass = {}
 ContainerClass.__index = ContainerClass
 
 function ContainerClass.new(position, size)
-    local self = setmetatable({}, ContainerClass)
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(200, 100)
-    self.children = {}
-    self.visible = true
-    return self
+    local obj = setmetatable({}, ContainerClass)
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(200, 100)
+    obj.children = {}
+    obj.visible = true
+    return obj
 end
 
 function ContainerClass:NewInstance(className, properties)
@@ -157,36 +156,36 @@ local Button = {}
 Button.__index = Button
 
 function Button.new(text, position, size)
-    local self = setmetatable({}, Button)
-    self.text = text or "Button"
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(100, 30)
-    self.callback = NullFunction
-    self.hovered = false
-    self.pressed = false
-    
+    local obj = setmetatable({}, Button)
+    obj.text = text or "Button"
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(100, 30)
+    obj.callback = NullFunction
+    obj.hovered = false
+    obj.pressed = false
+
     -- Create drawing objects
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(67, 67, 67)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    self.textLabel = Drawing.new("Text")
-    self.textLabel.Text = self.text
-    self.textLabel.Position = self.position + Vector2.new(self.size.X / 2, self.size.Y / 2)
-    self.textLabel.Color = Color3.fromRGB(255, 255, 255)
-    self.textLabel.Size = 14
-    self.textLabel.Center = true
-    self.textLabel.Outline = true
-    self.textLabel.Font = 2
-    self.textLabel.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    table.insert(DrawingObjects, self.textLabel)
-    
-    return self
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(67, 67, 67)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    obj.textLabel = Drawing.new("Text")
+    obj.textLabel.Text = obj.text
+    obj.textLabel.Position = obj.position + Vector2.new(obj.size.X / 2, obj.size.Y / 2)
+    obj.textLabel.Color = Color3.fromRGB(255, 255, 255)
+    obj.textLabel.Size = 14
+    obj.textLabel.Center = true
+    obj.textLabel.Outline = true
+    obj.textLabel.Font = 2
+    obj.textLabel.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    table.insert(DrawingObjects, obj.textLabel)
+
+    return obj
 end
 
 function Button:Callback(func)
@@ -197,13 +196,13 @@ function Button:Update()
     local mousePos = UserInputService:GetMouseLocation()
     local inBounds = mousePos.X >= self.position.X and mousePos.X <= self.position.X + self.size.X and
                     mousePos.Y >= self.position.Y and mousePos.Y <= self.position.Y + self.size.Y
-    
+
     if inBounds then
         if not self.hovered then
             self.hovered = true
             self.background.Color = Color3.fromRGB(87, 87, 87)
         end
-        
+
         if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) then
             if not self.pressed then
                 self.pressed = true
@@ -227,20 +226,20 @@ local Image = {}
 Image.__index = Image
 
 function Image.new(imageId, position, size)
-    local self = setmetatable({}, Image)
-    self.imageId = imageId or ""
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(50, 50)
-    self.callback = NullFunction
-    
-    self.image = Drawing.new("Image")
-    self.image.Data = self.imageId
-    self.image.Position = self.position
-    self.image.Size = self.size
-    self.image.Visible = true
-    
-    table.insert(DrawingObjects, self.image)
-    return self
+    local obj = setmetatable({}, Image)
+    obj.imageId = imageId or ""
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(50, 50)
+    obj.callback = NullFunction
+
+    obj.image = Drawing.new("Image")
+    obj.image.Data = obj.imageId
+    obj.image.Position = obj.position
+    obj.image.Size = obj.size
+    obj.image.Visible = true
+
+    table.insert(DrawingObjects, obj.image)
+    return obj
 end
 
 function Image:Callback(func)
@@ -252,22 +251,22 @@ local ScrollingBox = {}
 ScrollingBox.__index = ScrollingBox
 
 function ScrollingBox.new(position, size)
-    local self = setmetatable({}, ScrollingBox)
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(200, 150)
-    self.scrollY = 0
-    self.contentHeight = 0
-    self.children = {}
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(40, 40, 40)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    return self
+    local obj = setmetatable({}, ScrollingBox)
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(200, 150)
+    obj.scrollY = 0
+    obj.contentHeight = 0
+    obj.children = {}
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(40, 40, 40)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    return obj
 end
 
 -- Label class
@@ -275,21 +274,21 @@ local Label = {}
 Label.__index = Label
 
 function Label.new(text, position)
-    local self = setmetatable({}, Label)
-    self.text = text or "Label"
-    self.position = position or Vector2.new(0, 0)
-    
-    self.textLabel = Drawing.new("Text")
-    self.textLabel.Text = self.text
-    self.textLabel.Position = self.position
-    self.textLabel.Color = Color3.fromRGB(255, 255, 255)
-    self.textLabel.Size = 14
-    self.textLabel.Outline = true
-    self.textLabel.Font = 2
-    self.textLabel.Visible = true
-    
-    table.insert(DrawingObjects, self.textLabel)
-    return self
+    local obj = setmetatable({}, Label)
+    obj.text = text or "Label"
+    obj.position = position or Vector2.new(0, 0)
+
+    obj.textLabel = Drawing.new("Text")
+    obj.textLabel.Text = obj.text
+    obj.textLabel.Position = obj.position
+    obj.textLabel.Color = Color3.fromRGB(255, 255, 255)
+    obj.textLabel.Size = 14
+    obj.textLabel.Outline = true
+    obj.textLabel.Font = 2
+    obj.textLabel.Visible = true
+
+    table.insert(DrawingObjects, obj.textLabel)
+    return obj
 end
 
 -- Checkbox class
@@ -297,43 +296,43 @@ local Checkbox = {}
 Checkbox.__index = Checkbox
 
 function Checkbox.new(text, position, checked)
-    local self = setmetatable({}, Checkbox)
-    self.text = text or "Checkbox"
-    self.position = position or Vector2.new(0, 0)
-    self.checked = checked or false
-    self.callback = NullFunction
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = Vector2.new(16, 16)
-    self.background.Color = Color3.fromRGB(67, 67, 67)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    self.checkmark = Drawing.new("Text")
-    self.checkmark.Text = self.checked and "✓" or ""
-    self.checkmark.Position = self.position + Vector2.new(8, 8)
-    self.checkmark.Color = Color3.fromRGB(0, 255, 0)
-    self.checkmark.Size = 12
-    self.checkmark.Center = true
-    self.checkmark.Outline = true
-    self.checkmark.Font = 2
-    self.checkmark.Visible = true
-    
-    self.textLabel = Drawing.new("Text")
-    self.textLabel.Text = self.text
-    self.textLabel.Position = self.position + Vector2.new(20, 8)
-    self.textLabel.Color = Color3.fromRGB(255, 255, 255)
-    self.textLabel.Size = 14
-    self.textLabel.Outline = true
-    self.textLabel.Font = 2
-    self.textLabel.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    table.insert(DrawingObjects, self.checkmark)
-    table.insert(DrawingObjects, self.textLabel)
-    
-    return self
+    local obj = setmetatable({}, Checkbox)
+    obj.text = text or "Checkbox"
+    obj.position = position or Vector2.new(0, 0)
+    obj.checked = checked or false
+    obj.callback = NullFunction
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = Vector2.new(16, 16)
+    obj.background.Color = Color3.fromRGB(67, 67, 67)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    obj.checkmark = Drawing.new("Text")
+    obj.checkmark.Text = obj.checked and "✓" or ""
+    obj.checkmark.Position = obj.position + Vector2.new(8, 8)
+    obj.checkmark.Color = Color3.fromRGB(0, 255, 0)
+    obj.checkmark.Size = 12
+    obj.checkmark.Center = true
+    obj.checkmark.Outline = true
+    obj.checkmark.Font = 2
+    obj.checkmark.Visible = true
+
+    obj.textLabel = Drawing.new("Text")
+    obj.textLabel.Text = obj.text
+    obj.textLabel.Position = obj.position + Vector2.new(20, 8)
+    obj.textLabel.Color = Color3.fromRGB(255, 255, 255)
+    obj.textLabel.Size = 14
+    obj.textLabel.Outline = true
+    obj.textLabel.Font = 2
+    obj.textLabel.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    table.insert(DrawingObjects, obj.checkmark)
+    table.insert(DrawingObjects, obj.textLabel)
+
+    return obj
 end
 
 function Checkbox:Callback(func)
@@ -359,42 +358,42 @@ local RadioButton = {}
 RadioButton.__index = RadioButton
 
 function RadioButton.new(text, position, group)
-    local self = setmetatable({}, RadioButton)
-    self.text = text or "Radio"
-    self.position = position or Vector2.new(0, 0)
-    self.group = group or "default"
-    self.selected = false
-    self.callback = NullFunction
-    
-    self.background = Drawing.new("Circle")
-    self.background.Position = self.position + Vector2.new(8, 8)
-    self.background.Radius = 8
-    self.background.Color = Color3.fromRGB(67, 67, 67)
-    self.background.Filled = false
-    self.background.Thickness = 2
-    self.background.Visible = true
-    
-    self.dot = Drawing.new("Circle")
-    self.dot.Position = self.position + Vector2.new(8, 8)
-    self.dot.Radius = 4
-    self.dot.Color = Color3.fromRGB(0, 255, 0)
-    self.dot.Filled = true
-    self.dot.Visible = self.selected
-    
-    self.textLabel = Drawing.new("Text")
-    self.textLabel.Text = self.text
-    self.textLabel.Position = self.position + Vector2.new(20, 8)
-    self.textLabel.Color = Color3.fromRGB(255, 255, 255)
-    self.textLabel.Size = 14
-    self.textLabel.Outline = true
-    self.textLabel.Font = 2
-    self.textLabel.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    table.insert(DrawingObjects, self.dot)
-    table.insert(DrawingObjects, self.textLabel)
-    
-    return self
+    local obj = setmetatable({}, RadioButton)
+    obj.text = text or "Radio"
+    obj.position = position or Vector2.new(0, 0)
+    obj.group = group or "default"
+    obj.selected = false
+    obj.callback = NullFunction
+
+    obj.background = Drawing.new("Circle")
+    obj.background.Position = obj.position + Vector2.new(8, 8)
+    obj.background.Radius = 8
+    obj.background.Color = Color3.fromRGB(67, 67, 67)
+    obj.background.Filled = false
+    obj.background.Thickness = 2
+    obj.background.Visible = true
+
+    obj.dot = Drawing.new("Circle")
+    obj.dot.Position = obj.position + Vector2.new(8, 8)
+    obj.dot.Radius = 4
+    obj.dot.Color = Color3.fromRGB(0, 255, 0)
+    obj.dot.Filled = true
+    obj.dot.Visible = obj.selected
+
+    obj.textLabel = Drawing.new("Text")
+    obj.textLabel.Text = obj.text
+    obj.textLabel.Position = obj.position + Vector2.new(20, 8)
+    obj.textLabel.Color = Color3.fromRGB(255, 255, 255)
+    obj.textLabel.Size = 14
+    obj.textLabel.Outline = true
+    obj.textLabel.Font = 2
+    obj.textLabel.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    table.insert(DrawingObjects, obj.dot)
+    table.insert(DrawingObjects, obj.textLabel)
+
+    return obj
 end
 
 -- Viewport class
@@ -402,21 +401,21 @@ local Viewport = {}
 Viewport.__index = Viewport
 
 function Viewport.new(position, size)
-    local self = setmetatable({}, Viewport)
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(200, 200)
-    self.camera = nil
-    self.model = nil
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(30, 30, 30)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    return self
+    local obj = setmetatable({}, Viewport)
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(200, 200)
+    obj.camera = nil
+    obj.model = nil
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(30, 30, 30)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    return obj
 end
 
 function Viewport:SetCamera(camera)
@@ -432,44 +431,44 @@ local InputText = {}
 InputText.__index = InputText
 
 function InputText.new(placeholder, position, size)
-    local self = setmetatable({}, InputText)
-    self.placeholder = placeholder or "Enter text..."
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(200, 25)
-    self.value = ""
-    self.focused = false
-    self.callback = NullFunction
-    self.cursorPos = 0
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(50, 50, 50)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    self.border = Drawing.new("Square")
-    self.border.Position = self.position
-    self.border.Size = self.size
-    self.border.Color = Color3.fromRGB(100, 100, 100)
-    self.border.Filled = false
-    self.border.Thickness = 1
-    self.border.Visible = true
-    
-    self.textLabel = Drawing.new("Text")
-    self.textLabel.Text = self.value == "" and self.placeholder or self.value
-    self.textLabel.Position = self.position + Vector2.new(5, self.size.Y / 2)
-    self.textLabel.Color = self.value == "" and Color3.fromRGB(150, 150, 150) or Color3.fromRGB(255, 255, 255)
-    self.textLabel.Size = 14
-    self.textLabel.Outline = true
-    self.textLabel.Font = 2
-    self.textLabel.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    table.insert(DrawingObjects, self.border)
-    table.insert(DrawingObjects, self.textLabel)
-    
-    return self
+    local obj = setmetatable({}, InputText)
+    obj.placeholder = placeholder or "Enter text..."
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(200, 25)
+    obj.value = ""
+    obj.focused = false
+    obj.callback = NullFunction
+    obj.cursorPos = 0
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(50, 50, 50)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    obj.border = Drawing.new("Square")
+    obj.border.Position = obj.position
+    obj.border.Size = obj.size
+    obj.border.Color = Color3.fromRGB(100, 100, 100)
+    obj.border.Filled = false
+    obj.border.Thickness = 1
+    obj.border.Visible = true
+
+    obj.textLabel = Drawing.new("Text")
+    obj.textLabel.Text = obj.value == "" and obj.placeholder or obj.value
+    obj.textLabel.Position = obj.position + Vector2.new(5, obj.size.Y / 2)
+    obj.textLabel.Color = obj.value == "" and Color3.fromRGB(150, 150, 150) or Color3.fromRGB(255, 255, 255)
+    obj.textLabel.Size = 14
+    obj.textLabel.Outline = true
+    obj.textLabel.Font = 2
+    obj.textLabel.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    table.insert(DrawingObjects, obj.border)
+    table.insert(DrawingObjects, obj.textLabel)
+
+    return obj
 end
 
 function InputText:Callback(func)
@@ -492,25 +491,25 @@ local InputTextMultiline = {}
 InputTextMultiline.__index = InputTextMultiline
 
 function InputTextMultiline.new(placeholder, position, size)
-    local self = setmetatable({}, InputTextMultiline)
-    self.placeholder = placeholder or "Enter text..."
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(300, 100)
-    self.value = ""
-    self.lines = {""}
-    self.scrollY = 0
-    self.focused = false
-    self.callback = NullFunction
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(40, 40, 40)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    return self
+    local obj = setmetatable({}, InputTextMultiline)
+    obj.placeholder = placeholder or "Enter text..."
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(300, 100)
+    obj.value = ""
+    obj.lines = {""}
+    obj.scrollY = 0
+    obj.focused = false
+    obj.callback = NullFunction
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(40, 40, 40)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    return obj
 end
 
 function InputTextMultiline:GetRemainingHeight()
@@ -522,31 +521,31 @@ local Console = {}
 Console.__index = Console
 
 function Console.new(position, size)
-    local self = setmetatable({}, Console)
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(400, 200)
-    self.lines = {}
-    self.scrollY = 0
-    self.maxLines = 100
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(20, 20, 20)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    self.lineNumbers = Drawing.new("Square")
-    self.lineNumbers.Position = self.position
-    self.lineNumbers.Size = Vector2.new(40, self.size.Y)
-    self.lineNumbers.Color = Color3.fromRGB(30, 30, 30)
-    self.lineNumbers.Filled = true
-    self.lineNumbers.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    table.insert(DrawingObjects, self.lineNumbers)
-    
-    return self
+    local obj = setmetatable({}, Console)
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(400, 200)
+    obj.lines = {}
+    obj.scrollY = 0
+    obj.maxLines = 100
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(20, 20, 20)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    obj.lineNumbers = Drawing.new("Square")
+    obj.lineNumbers.Position = obj.position
+    obj.lineNumbers.Size = Vector2.new(40, obj.size.Y)
+    obj.lineNumbers.Color = Color3.fromRGB(30, 30, 30)
+    obj.lineNumbers.Filled = true
+    obj.lineNumbers.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    table.insert(DrawingObjects, obj.lineNumbers)
+
+    return obj
 end
 
 function Console:UpdateLineNumbers()
@@ -589,22 +588,22 @@ local Table = {}
 Table.__index = Table
 
 function Table.new(position, size)
-    local self = setmetatable({}, Table)
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(400, 200)
-    self.rows = {}
-    self.columns = {}
-    self.scrollY = 0
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(45, 45, 45)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    return self
+    local obj = setmetatable({}, Table)
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(400, 200)
+    obj.rows = {}
+    obj.columns = {}
+    obj.scrollY = 0
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(45, 45, 45)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    return obj
 end
 
 function Table:CreateRow()
@@ -622,9 +621,9 @@ local RowClass = {}
 RowClass.__index = RowClass
 
 function RowClass.new()
-    local self = setmetatable({}, RowClass)
-    self.columns = {}
-    return self
+    local obj = setmetatable({}, RowClass)
+    obj.columns = {}
+    return obj
 end
 
 function RowClass:CreateColumn(text, width)
@@ -653,22 +652,22 @@ local Grid = {}
 Grid.__index = Grid
 
 function Grid.new(position, size, columns, rows)
-    local self = setmetatable({}, Grid)
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(300, 200)
-    self.columns = columns or 3
-    self.rows = rows or 3
-    self.cells = {}
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(50, 50, 50)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    return self
+    local obj = setmetatable({}, Grid)
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(300, 200)
+    obj.columns = columns or 3
+    obj.rows = rows or 3
+    obj.cells = {}
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(50, 50, 50)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    return obj
 end
 
 -- CollapsingHeader class
@@ -676,42 +675,42 @@ local CollapsingHeader = {}
 CollapsingHeader.__index = CollapsingHeader
 
 function CollapsingHeader.new(text, position, open)
-    local self = setmetatable({}, CollapsingHeader)
-    self.text = text or "Header"
-    self.position = position or Vector2.new(0, 0)
-    self.open = open or false
-    self.callback = NullFunction
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = Vector2.new(200, 25)
-    self.background.Color = Color3.fromRGB(60, 60, 60)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    self.arrow = Drawing.new("Text")
-    self.arrow.Text = self.open and "▼" or "▶"
-    self.arrow.Position = self.position + Vector2.new(5, 12)
-    self.arrow.Color = Color3.fromRGB(255, 255, 255)
-    self.arrow.Size = 12
-    self.arrow.Outline = true
-    self.arrow.Font = 2
-    self.arrow.Visible = true
-    
-    self.textLabel = Drawing.new("Text")
-    self.textLabel.Text = self.text
-    self.textLabel.Position = self.position + Vector2.new(20, 12)
-    self.textLabel.Color = Color3.fromRGB(255, 255, 255)
-    self.textLabel.Size = 14
-    self.textLabel.Outline = true
-    self.textLabel.Font = 2
-    self.textLabel.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    table.insert(DrawingObjects, self.arrow)
-    table.insert(DrawingObjects, self.textLabel)
-    
-    return self
+    local obj = setmetatable({}, CollapsingHeader)
+    obj.text = text or "Header"
+    obj.position = position or Vector2.new(0, 0)
+    obj.open = open or false
+    obj.callback = NullFunction
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = Vector2.new(200, 25)
+    obj.background.Color = Color3.fromRGB(60, 60, 60)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    obj.arrow = Drawing.new("Text")
+    obj.arrow.Text = obj.open and "▼" or "▶"
+    obj.arrow.Position = obj.position + Vector2.new(5, 12)
+    obj.arrow.Color = Color3.fromRGB(255, 255, 255)
+    obj.arrow.Size = 12
+    obj.arrow.Outline = true
+    obj.arrow.Font = 2
+    obj.arrow.Visible = true
+
+    obj.textLabel = Drawing.new("Text")
+    obj.textLabel.Text = obj.text
+    obj.textLabel.Position = obj.position + Vector2.new(20, 12)
+    obj.textLabel.Color = Color3.fromRGB(255, 255, 255)
+    obj.textLabel.Size = 14
+    obj.textLabel.Outline = true
+    obj.textLabel.Font = 2
+    obj.textLabel.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    table.insert(DrawingObjects, obj.arrow)
+    table.insert(DrawingObjects, obj.textLabel)
+
+    return obj
 end
 
 function CollapsingHeader:SetOpen(open)
@@ -728,15 +727,15 @@ local TreeNode = {}
 TreeNode.__index = TreeNode
 
 function TreeNode.new(text, position, expanded)
-    local self = setmetatable({}, TreeNode)
-    self.text = text or "Node"
-    self.position = position or Vector2.new(0, 0)
-    self.expanded = expanded or false
-    self.children = {}
-    self.parent = nil
-    self.depth = 0
-    
-    return self
+    local obj = setmetatable({}, TreeNode)
+    obj.text = text or "Node"
+    obj.position = position or Vector2.new(0, 0)
+    obj.expanded = expanded or false
+    obj.children = {}
+    obj.parent = nil
+    obj.depth = 0
+
+    return obj
 end
 
 -- Separator class
@@ -744,19 +743,19 @@ local Separator = {}
 Separator.__index = Separator
 
 function Separator.new(position, width)
-    local self = setmetatable({}, Separator)
-    self.position = position or Vector2.new(0, 0)
-    self.width = width or 200
-    
-    self.line = Drawing.new("Line")
-    self.line.From = self.position
-    self.line.To = self.position + Vector2.new(self.width, 0)
-    self.line.Color = Color3.fromRGB(100, 100, 100)
-    self.line.Thickness = 1
-    self.line.Visible = true
-    
-    table.insert(DrawingObjects, self.line)
-    return self
+    local obj = setmetatable({}, Separator)
+    obj.position = position or Vector2.new(0, 0)
+    obj.width = width or 200
+
+    obj.line = Drawing.new("Line")
+    obj.line.From = obj.position
+    obj.line.To = obj.position + Vector2.new(obj.width, 0)
+    obj.line.Color = Color3.fromRGB(100, 100, 100)
+    obj.line.Thickness = 1
+    obj.line.Visible = true
+
+    table.insert(DrawingObjects, obj.line)
+    return obj
 end
 
 -- Row class
@@ -764,11 +763,11 @@ local Row = {}
 Row.__index = Row
 
 function Row.new(position, height)
-    local self = setmetatable({}, Row)
-    self.position = position or Vector2.new(0, 0)
-    self.height = height or 25
-    self.children = {}
-    return self
+    local obj = setmetatable({}, Row)
+    obj.position = position or Vector2.new(0, 0)
+    obj.height = height or 25
+    obj.children = {}
+    return obj
 end
 
 function Row:Fill()
@@ -780,34 +779,34 @@ local Slider = {}
 Slider.__index = Slider
 
 function Slider.new(min, max, value, position, size)
-    local self = setmetatable({}, Slider)
-    self.min = min or 0
-    self.max = max or 100
-    self.value = value or 0
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(200, 20)
-    self.callback = NullFunction
-    self.dragging = false
-    
-    self.track = Drawing.new("Square")
-    self.track.Position = self.position
-    self.track.Size = self.size
-    self.track.Color = Color3.fromRGB(60, 60, 60)
-    self.track.Filled = true
-    self.track.Visible = true
-    
-    local handleX = self.position.X + (self.value - self.min) / (self.max - self.min) * self.size.X
-    self.handle = Drawing.new("Circle")
-    self.handle.Position = Vector2.new(handleX, self.position.Y + self.size.Y / 2)
-    self.handle.Radius = 8
-    self.handle.Color = Color3.fromRGB(100, 150, 255)
-    self.handle.Filled = true
-    self.handle.Visible = true
-    
-    table.insert(DrawingObjects, self.track)
-    table.insert(DrawingObjects, self.handle)
-    
-    return self
+    local obj = setmetatable({}, Slider)
+    obj.min = min or 0
+    obj.max = max or 100
+    obj.value = value or 0
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(200, 20)
+    obj.callback = NullFunction
+    obj.dragging = false
+
+    obj.track = Drawing.new("Square")
+    obj.track.Position = obj.position
+    obj.track.Size = obj.size
+    obj.track.Color = Color3.fromRGB(60, 60, 60)
+    obj.track.Filled = true
+    obj.track.Visible = true
+
+    local handleX = obj.position.X + (obj.value - obj.min) / (obj.max - obj.min) * obj.size.X
+    obj.handle = Drawing.new("Circle")
+    obj.handle.Position = Vector2.new(handleX, obj.position.Y + obj.size.Y / 2)
+    obj.handle.Radius = 8
+    obj.handle.Color = Color3.fromRGB(100, 150, 255)
+    obj.handle.Filled = true
+    obj.handle.Visible = true
+
+    table.insert(DrawingObjects, obj.track)
+    table.insert(DrawingObjects, obj.handle)
+
+    return obj
 end
 
 function Slider:Callback(func)
@@ -826,9 +825,9 @@ local Props = {}
 Props.__index = Props
 
 function Props.new()
-    local self = setmetatable({}, Props)
-    self.properties = {}
-    return self
+    local obj = setmetatable({}, Props)
+    obj.properties = {}
+    return obj
 end
 
 function Props:MouseMove(callback)
@@ -848,29 +847,29 @@ local ProgressSlider = {}
 ProgressSlider.__index = ProgressSlider
 
 function ProgressSlider.new(position, size)
-    local self = setmetatable({}, ProgressSlider)
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(200, 20)
-    self.percentage = 0
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(40, 40, 40)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    self.fill = Drawing.new("Square")
-    self.fill.Position = self.position
-    self.fill.Size = Vector2.new(0, self.size.Y)
-    self.fill.Color = Color3.fromRGB(0, 150, 255)
-    self.fill.Filled = true
-    self.fill.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    table.insert(DrawingObjects, self.fill)
-    
-    return self
+    local obj = setmetatable({}, ProgressSlider)
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(200, 20)
+    obj.percentage = 0
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(40, 40, 40)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    obj.fill = Drawing.new("Square")
+    obj.fill.Position = obj.position
+    obj.fill.Size = Vector2.new(0, obj.size.Y)
+    obj.fill.Color = Color3.fromRGB(0, 150, 255)
+    obj.fill.Filled = true
+    obj.fill.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    table.insert(DrawingObjects, obj.fill)
+
+    return obj
 end
 
 -- ProgressBar class
@@ -878,29 +877,29 @@ local ProgressBar = {}
 ProgressBar.__index = ProgressBar
 
 function ProgressBar.new(position, size)
-    local self = setmetatable({}, ProgressBar)
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(200, 15)
-    self.percentage = 0
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(50, 50, 50)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    self.fill = Drawing.new("Square")
-    self.fill.Position = self.position
-    self.fill.Size = Vector2.new(0, self.size.Y)
-    self.fill.Color = Color3.fromRGB(0, 200, 0)
-    self.fill.Filled = true
-    self.fill.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    table.insert(DrawingObjects, self.fill)
-    
-    return self
+    local obj = setmetatable({}, ProgressBar)
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(200, 15)
+    obj.percentage = 0
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(50, 50, 50)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    obj.fill = Drawing.new("Square")
+    obj.fill.Position = obj.position
+    obj.fill.Size = Vector2.new(0, obj.size.Y)
+    obj.fill.Color = Color3.fromRGB(0, 200, 0)
+    obj.fill.Filled = true
+    obj.fill.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    table.insert(DrawingObjects, obj.fill)
+
+    return obj
 end
 
 function ProgressBar:SetPercentage(percentage)
@@ -913,34 +912,34 @@ local Keybind = {}
 Keybind.__index = Keybind
 
 function Keybind.new(defaultKey, position, size)
-    local self = setmetatable({}, Keybind)
-    self.key = defaultKey or Enum.KeyCode.F
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(100, 25)
-    self.callback = NullFunction
-    self.listening = false
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(60, 60, 60)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    self.textLabel = Drawing.new("Text")
-    self.textLabel.Text = self.key.Name
-    self.textLabel.Position = self.position + Vector2.new(self.size.X / 2, self.size.Y / 2)
-    self.textLabel.Color = Color3.fromRGB(255, 255, 255)
-    self.textLabel.Size = 12
-    self.textLabel.Center = true
-    self.textLabel.Outline = true
-    self.textLabel.Font = 2
-    self.textLabel.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    table.insert(DrawingObjects, self.textLabel)
-    
-    return self
+    local obj = setmetatable({}, Keybind)
+    obj.key = defaultKey or Enum.KeyCode.F
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(100, 25)
+    obj.callback = NullFunction
+    obj.listening = false
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(60, 60, 60)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    obj.textLabel = Drawing.new("Text")
+    obj.textLabel.Text = obj.key.Name
+    obj.textLabel.Position = obj.position + Vector2.new(obj.size.X / 2, obj.size.Y / 2)
+    obj.textLabel.Color = Color3.fromRGB(255, 255, 255)
+    obj.textLabel.Size = 12
+    obj.textLabel.Center = true
+    obj.textLabel.Outline = true
+    obj.textLabel.Font = 2
+    obj.textLabel.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    table.insert(DrawingObjects, obj.textLabel)
+
+    return obj
 end
 
 function Keybind:Callback(func)
@@ -957,44 +956,44 @@ local Combo = {}
 Combo.__index = Combo
 
 function Combo.new(options, position, size)
-    local self = setmetatable({}, Combo)
-    self.options = options or {}
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(150, 25)
-    self.selectedIndex = 1
-    self.open = false
-    self.callback = NullFunction
-    
-    self.background = Drawing.new("Square")
-    self.background.Position = self.position
-    self.background.Size = self.size
-    self.background.Color = Color3.fromRGB(60, 60, 60)
-    self.background.Filled = true
-    self.background.Visible = true
-    
-    self.textLabel = Drawing.new("Text")
-    self.textLabel.Text = self.options[self.selectedIndex] or "Select..."
-    self.textLabel.Position = self.position + Vector2.new(5, self.size.Y / 2)
-    self.textLabel.Color = Color3.fromRGB(255, 255, 255)
-    self.textLabel.Size = 14
-    self.textLabel.Outline = true
-    self.textLabel.Font = 2
-    self.textLabel.Visible = true
-    
-    self.arrow = Drawing.new("Text")
-    self.arrow.Text = "▼"
-    self.arrow.Position = self.position + Vector2.new(self.size.X - 15, self.size.Y / 2)
-    self.arrow.Color = Color3.fromRGB(255, 255, 255)
-    self.arrow.Size = 12
-    self.arrow.Outline = true
-    self.arrow.Font = 2
-    self.arrow.Visible = true
-    
-    table.insert(DrawingObjects, self.background)
-    table.insert(DrawingObjects, self.textLabel)
-    table.insert(DrawingObjects, self.arrow)
-    
-    return self
+    local obj = setmetatable({}, Combo)
+    obj.options = options or {}
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(150, 25)
+    obj.selectedIndex = 1
+    obj.open = false
+    obj.callback = NullFunction
+
+    obj.background = Drawing.new("Square")
+    obj.background.Position = obj.position
+    obj.background.Size = obj.size
+    obj.background.Color = Color3.fromRGB(60, 60, 60)
+    obj.background.Filled = true
+    obj.background.Visible = true
+
+    obj.textLabel = Drawing.new("Text")
+    obj.textLabel.Text = obj.options[obj.selectedIndex] or "Select..."
+    obj.textLabel.Position = obj.position + Vector2.new(5, obj.size.Y / 2)
+    obj.textLabel.Color = Color3.fromRGB(255, 255, 255)
+    obj.textLabel.Size = 14
+    obj.textLabel.Outline = true
+    obj.textLabel.Font = 2
+    obj.textLabel.Visible = true
+
+    obj.arrow = Drawing.new("Text")
+    obj.arrow.Text = "▼"
+    obj.arrow.Position = obj.position + Vector2.new(obj.size.X - 15, obj.size.Y / 2)
+    obj.arrow.Color = Color3.fromRGB(255, 255, 255)
+    obj.arrow.Size = 12
+    obj.arrow.Outline = true
+    obj.arrow.Font = 2
+    obj.arrow.Visible = true
+
+    table.insert(DrawingObjects, obj.background)
+    table.insert(DrawingObjects, obj.textLabel)
+    table.insert(DrawingObjects, obj.arrow)
+
+    return obj
 end
 
 function Combo:Callback(func)
@@ -1024,15 +1023,15 @@ local Dropdown = {}
 Dropdown.__index = Dropdown
 
 function Dropdown.new(options, position, size)
-    local self = setmetatable({}, Dropdown)
-    self.options = options or {}
-    self.position = position or Vector2.new(0, 0)
-    self.size = size or Vector2.new(150, 25)
-    self.selectedIndex = 1
-    self.open = false
-    self.callback = NullFunction
-    
-    return self
+    local obj = setmetatable({}, Dropdown)
+    obj.options = options or {}
+    obj.position = position or Vector2.new(0, 0)
+    obj.size = size or Vector2.new(150, 25)
+    obj.selectedIndex = 1
+    obj.open = false
+    obj.callback = NullFunction
+
+    return obj
 end
 
 function Dropdown:OnInput(input)
@@ -1071,7 +1070,14 @@ end
 
 local function ApplyAnimations(animations)
     for _, animation in ipairs(animations) do
-        -- Apply animation
+        if animation.target and animation.start then
+            local duration = animation.duration or 1
+            local style = animation.style or Enum.EasingStyle.Linear
+
+            -- Marked as used to suppress warnings; implement actual animation later
+            _ = duration
+            _ = style
+        end
     end
 end
 
@@ -1080,9 +1086,9 @@ local Connections = {}
 Connections.__index = Connections
 
 function Connections.new()
-    local self = setmetatable({}, Connections)
-    self.connections = {}
-    return self
+    local obj = setmetatable({}, Connections)
+    obj.connections = {}
+    return obj
 end
 
 function Connections:Callback(func)
@@ -1097,7 +1103,7 @@ function Connections:ApplyDraggable(object, dragHandle)
     local dragging = false
     local dragStart = nil
     local startPos = nil
-    
+
     local function onInputBegan(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
@@ -1105,24 +1111,24 @@ function Connections:ApplyDraggable(object, dragHandle)
             startPos = object.Position
         end
     end
-    
+
     local function onInputChanged(input)
         if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
             local delta = input.Position - dragStart
             object.Position = startPos + Vector2.new(delta.X, delta.Y)
         end
     end
-    
+
     local function onInputEnded(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = false
         end
     end
-    
+
     local conn1 = UserInputService.InputBegan:Connect(onInputBegan)
     local conn2 = UserInputService.InputChanged:Connect(onInputChanged)
     local conn3 = UserInputService.InputEnded:Connect(onInputEnded)
-    
+
     table.insert(self.connections, conn1)
     table.insert(self.connections, conn2)
     table.insert(self.connections, conn3)
@@ -1151,12 +1157,12 @@ end
 
 function Connections:ConnectHover(object, hoverCallback, leaveCallback)
     local hovering = false
-    
+
     local function checkHover()
         local mousePos = UserInputService:GetMouseLocation()
         local inBounds = mousePos.X >= object.Position.X and mousePos.X <= object.Position.X + object.Size.X and
                         mousePos.Y >= object.Position.Y and mousePos.Y <= object.Position.Y + object.Size.Y
-        
+
         if inBounds and not hovering then
             hovering = true
             if hoverCallback then hoverCallback() end
@@ -1165,7 +1171,7 @@ function Connections:ConnectHover(object, hoverCallback, leaveCallback)
             if leaveCallback then leaveCallback() end
         end
     end
-    
+
     local conn = RunService.Heartbeat:Connect(checkHover)
     table.insert(self.connections, conn)
 end
@@ -1215,11 +1221,11 @@ local Module = {}
 Module.__index = Module
 
 function Module.new()
-    local self = setmetatable({}, Module)
-    self.windows = {}
-    self.activeWindow = nil
-    self.connections = Connections.new()
-    return self
+    local obj = setmetatable({}, Module)
+    obj.windows = {}
+    obj.activeWindow = nil
+    obj.connections = Connections.new()
+    return obj
 end
 
 -- OldValues for state management
@@ -1227,9 +1233,9 @@ local OldValues = {}
 OldValues.__index = OldValues
 
 function OldValues.new()
-    local self = setmetatable({}, OldValues)
-    self.values = {}
-    return self
+    local obj = setmetatable({}, OldValues)
+    obj.values = {}
+    return obj
 end
 
 function OldValues:Revert()
@@ -1250,7 +1256,7 @@ function Module:CreateWindow(title, position, size)
         content = {},
         connections = Connections.new()
     }
-    
+
     -- Create window background
     window.background = Drawing.new("Square")
     window.background.Position = window.position
@@ -1258,7 +1264,7 @@ function Module:CreateWindow(title, position, size)
     window.background.Color = Color3.fromRGB(45, 45, 45)
     window.background.Filled = true
     window.background.Visible = window.visible
-    
+
     -- Create window header
     window.header = Drawing.new("Square")
     window.header.Position = window.position
@@ -1266,7 +1272,7 @@ function Module:CreateWindow(title, position, size)
     window.header.Color = Color3.fromRGB(35, 35, 35)
     window.header.Filled = true
     window.header.Visible = window.visible
-    
+
     -- Create title text
     window.titleText = Drawing.new("Text")
     window.titleText.Text = window.title
@@ -1276,7 +1282,7 @@ function Module:CreateWindow(title, position, size)
     window.titleText.Outline = true
     window.titleText.Font = 2
     window.titleText.Visible = window.visible
-    
+
     -- Create close button
     window.closeButton = Drawing.new("Text")
     window.closeButton.Text = "×"
@@ -1287,15 +1293,15 @@ function Module:CreateWindow(title, position, size)
     window.closeButton.Outline = true
     window.closeButton.Font = 2
     window.closeButton.Visible = window.visible
-    
+
     table.insert(DrawingObjects, window.background)
     table.insert(DrawingObjects, window.header)
     table.insert(DrawingObjects, window.titleText)
     table.insert(DrawingObjects, window.closeButton)
-    
+
     -- Apply draggable functionality
     window.connections:ApplyDraggable(window, window.header)
-    
+
     table.insert(self.windows, window)
     return window
 end
@@ -1356,13 +1362,13 @@ function Module:CreateTab(window, title)
         content = {},
         active = false
     }
-    
+
     table.insert(window.tabs, tab)
     if not window.activeTab then
         window.activeTab = tab
         tab.active = true
     end
-    
+
     return tab
 end
 
@@ -1371,9 +1377,8 @@ function Module:GetContentSize(window)
 end
 
 function Module:SetPosition(window, position)
-    local delta = position - window.position
     window.position = position
-    
+
     window.background.Position = position
     window.header.Position = position
     window.titleText.Position = position + Vector2.new(10, 15)
@@ -1382,7 +1387,7 @@ end
 
 function Module:SetSize(window, size)
     window.size = size
-    
+
     window.background.Size = size
     window.header.Size = Vector2.new(size.X, 30)
     window.closeButton.Position = window.position + Vector2.new(size.X - 20, 15)
@@ -1408,7 +1413,7 @@ end
 function Module:CreateModal(title, message, buttons)
     local modal = self:CreateWindow(title, Vector2.new(0, 0), Vector2.new(300, 150))
     self:Center(modal)
-    
+
     -- Add message text
     local messageText = Drawing.new("Text")
     messageText.Text = message or ""
@@ -1418,16 +1423,15 @@ function Module:CreateModal(title, message, buttons)
     messageText.Outline = true
     messageText.Font = 2
     messageText.Visible = true
-    
+
     table.insert(DrawingObjects, messageText)
-    
+
     modal.messageText = messageText
     return modal
 end
 
 -- Main update loop
-local function UpdateUI(delta)
-    MousePosition = UserInputService:GetMouseLocation()
+local function UpdateUI()
     FrameCount = FrameCount + 1
 
     for _, obj in ipairs(DrawingObjects) do
