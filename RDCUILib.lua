@@ -295,7 +295,7 @@ function ImGui:CreatePrefabs()
 	local KeybindLayout = Instance.new("UIListLayout")
 	KeybindLayout.FillDirection = Enum.FillDirection.Horizontal
 	KeybindLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-	KeybindLayout.HorizontalAlignment = Enum.HorizontalAlignment.SpaceBetween
+	KeybindLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
 	KeybindLayout.Parent = Keybind
 	
 	local KeybindLabel = Instance.new("TextLabel")
