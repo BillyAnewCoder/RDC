@@ -670,7 +670,7 @@ function ImGui:CreatePrefabs()
 	local TitleBarLayout = Instance.new("UIListLayout")
 	TitleBarLayout.FillDirection = Enum.FillDirection.Horizontal
 	TitleBarLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-	TitleBarLayout.HorizontalAlignment = Enum.HorizontalAlignment.SpaceBetween
+	TitleBarLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
 	TitleBarLayout.Parent = WindowTitleBar
 	
 	local TitleBarLeft = Instance.new("Frame")
