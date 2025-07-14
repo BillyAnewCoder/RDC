@@ -1426,31 +1426,45 @@ function Module:CreateModal(title, message, buttons)
 end
 
 -- Main update loop
-local function UpdateUI(deltaTime)
+local function UpdateUI(delta)
     MousePosition = UserInputService:GetMouseLocation()
-    FrameCount = FrameCount + 1
-    
-    -- Update all interactive elements
+    FrameCount += 1
+
     for _, obj in ipairs(DrawingObjects) do
         if obj.Update then
-            obj:Update(deltaTime)
+            obj:Update()
         end
     end
+end
+
+-- Cleanup drawing objects
+local function Cleanup()
+    for _, obj in ipairs(DrawingObjects) do
+        if obj.Remove then
+            obj:Remove()
+        end
+    end
+    table.clear(DrawingObjects)
 end
 
 -- Initialize UI system
 local function Initialize()
     RunService.Heartbeat:Connect(UpdateUI)
-    
-    -- Handle cleanup on game shutdown
-    game:BindToClose(function()
-        for _, obj in ipairs(DrawingObjects) do
-            if obj.Remove then
-                obj:Remove()
-            end
-        end
-    end)
 end
+
+-- Cleanup when UI resets
+local localPlayer = game:GetService("Players").LocalPlayer
+local playerGui = localPlayer:WaitForChild("PlayerGui")
+
+playerGui.AncestryChanged:Connect(function(_, parent)
+    if not parent then
+        Cleanup()
+    end
+end)
+
+localPlayer.CharacterRemoving:Connect(function()
+    Cleanup()
+end)
 
 -- Export all classes and functions
 RDCUILib.ImGui = ImGui
@@ -1494,7 +1508,6 @@ RDCUILib.Colors = Colors
 RDCUILib.Module = Module
 RDCUILib.OldValues = OldValues
 
--- Initialize the library
 Initialize()
 
 return RDCUILib
