@@ -38,9 +38,7 @@ local ImGui = {
 
 	Windows = {},
 	Animation = TweenInfo.new(0.1),
-	UIAssetId = "rbxassetid://76246418997296"
 }
-
 
 --// Universal functions
 local NullFunction = function() end
@@ -70,31 +68,818 @@ local Mouse = LocalPlayer:GetMouse()
 local IsStudio = RunService:IsStudio()
 ImGui.NoWarnings = not IsStudio
 
---// Prefabs
-function ImGui:FetchUI()
-	--// Cache check 
-	local CacheName = "DepsoImGui"
-	if _G[CacheName] then
-		self:Warn("Prefabs loaded from Cache")
-		return _G[CacheName]
-	end
-
-	local UI = nil
-
-	--// Universal
-	if not IsStudio then
-		local UIAssetId = ImGui.UIAssetId
-		UI = game:GetObjects(UIAssetId)[1]
-	else --// Studio
-		local UIName = "DepsoImGui"
-		UI = PlayerGui:FindFirstChild(UIName) or script.DepsoImGui
-	end
-
-	_G[CacheName] = UI
+--// Create all prefabs programmatically
+function ImGui:CreatePrefabs()
+	local UI = Instance.new("ScreenGui")
+	UI.Name = "DepsoImGui"
+	UI.ResetOnSpawn = false
+	UI.DisplayOrder = 999
+	
+	local Prefabs = Instance.new("Folder")
+	Prefabs.Name = "Prefabs"
+	Prefabs.Parent = UI
+	
+	-- Button Prefab
+	local Button = Instance.new("TextButton")
+	Button.Name = "Button"
+	Button.Size = UDim2.new(1, 0, 0, 25)
+	Button.BackgroundColor3 = Color3.fromRGB(67, 67, 67)
+	Button.BorderSizePixel = 0
+	Button.Text = "Button"
+	Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Button.TextSize = 14
+	Button.Font = Enum.Font.SourceSans
+	Button.Parent = Prefabs
+	
+	local ButtonCorner = Instance.new("UICorner")
+	ButtonCorner.CornerRadius = UDim.new(0, 4)
+	ButtonCorner.Parent = Button
+	
+	-- Label Prefab
+	local Label = Instance.new("TextLabel")
+	Label.Name = "Label"
+	Label.Size = UDim2.new(1, 0, 0, 20)
+	Label.BackgroundTransparency = 1
+	Label.Text = "Label"
+	Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Label.TextSize = 14
+	Label.Font = Enum.Font.SourceSans
+	Label.TextXAlignment = Enum.TextXAlignment.Left
+	Label.Parent = Prefabs
+	
+	-- CheckBox Prefab
+	local CheckBox = Instance.new("Frame")
+	CheckBox.Name = "CheckBox"
+	CheckBox.Size = UDim2.new(1, 0, 0, 25)
+	CheckBox.BackgroundTransparency = 1
+	CheckBox.Parent = Prefabs
+	
+	local CheckBoxLayout = Instance.new("UIListLayout")
+	CheckBoxLayout.FillDirection = Enum.FillDirection.Horizontal
+	CheckBoxLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+	CheckBoxLayout.Padding = UDim.new(0, 5)
+	CheckBoxLayout.Parent = CheckBox
+	
+	local Tickbox = Instance.new("ImageButton")
+	Tickbox.Name = "Tickbox"
+	Tickbox.Size = UDim2.new(0, 16, 0, 16)
+	Tickbox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	Tickbox.BorderSizePixel = 0
+	Tickbox.Text = ""
+	Tickbox.Parent = CheckBox
+	
+	local TickboxCorner = Instance.new("UICorner")
+	TickboxCorner.CornerRadius = UDim.new(0, 2)
+	TickboxCorner.Parent = Tickbox
+	
+	local Tick = Instance.new("ImageLabel")
+	Tick.Name = "Tick"
+	Tick.Size = UDim2.new(0.8, 0, 0.8, 0)
+	Tick.Position = UDim2.new(0.1, 0, 0.1, 0)
+	Tick.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+	Tick.BorderSizePixel = 0
+	Tick.Image = ""
+	Tick.Parent = Tickbox
+	
+	local TickCorner = Instance.new("UICorner")
+	TickCorner.CornerRadius = UDim.new(0, 1)
+	TickCorner.Parent = Tick
+	
+	local CheckLabel = Instance.new("TextLabel")
+	CheckLabel.Name = "Label"
+	CheckLabel.Size = UDim2.new(1, -21, 1, 0)
+	CheckLabel.BackgroundTransparency = 1
+	CheckLabel.Text = "Checkbox"
+	CheckLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	CheckLabel.TextSize = 14
+	CheckLabel.Font = Enum.Font.SourceSans
+	CheckLabel.TextXAlignment = Enum.TextXAlignment.Left
+	CheckLabel.Parent = CheckBox
+	
+	-- TextInput Prefab
+	local TextInput = Instance.new("Frame")
+	TextInput.Name = "TextInput"
+	TextInput.Size = UDim2.new(1, 0, 0, 25)
+	TextInput.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	TextInput.BorderSizePixel = 0
+	TextInput.Parent = Prefabs
+	
+	local TextInputCorner = Instance.new("UICorner")
+	TextInputCorner.CornerRadius = UDim.new(0, 4)
+	TextInputCorner.Parent = TextInput
+	
+	local TextInputStroke = Instance.new("UIStroke")
+	TextInputStroke.Color = Color3.fromRGB(100, 100, 100)
+	TextInputStroke.Thickness = 1
+	TextInputStroke.Parent = TextInput
+	
+	local Input = Instance.new("TextBox")
+	Input.Name = "Input"
+	Input.Size = UDim2.new(1, -10, 1, 0)
+	Input.Position = UDim2.new(0, 5, 0, 0)
+	Input.BackgroundTransparency = 1
+	Input.Text = ""
+	Input.PlaceholderText = "Enter text..."
+	Input.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Input.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+	Input.TextSize = 14
+	Input.Font = Enum.Font.SourceSans
+	Input.TextXAlignment = Enum.TextXAlignment.Left
+	Input.ClearTextOnFocus = false
+	Input.Parent = TextInput
+	
+	-- Slider Prefab
+	local Slider = Instance.new("TextButton")
+	Slider.Name = "Slider"
+	Slider.Size = UDim2.new(1, 0, 0, 25)
+	Slider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	Slider.BorderSizePixel = 0
+	Slider.Text = ""
+	Slider.Parent = Prefabs
+	
+	local SliderCorner = Instance.new("UICorner")
+	SliderCorner.CornerRadius = UDim.new(0, 4)
+	SliderCorner.Parent = Slider
+	
+	local SliderPadding = Instance.new("UIPadding")
+	SliderPadding.PaddingLeft = UDim.new(0, 5)
+	SliderPadding.PaddingRight = UDim.new(0, 5)
+	SliderPadding.Parent = Slider
+	
+	local Grab = Instance.new("Frame")
+	Grab.Name = "Grab"
+	Grab.Size = UDim2.new(0, 12, 0.8, 0)
+	Grab.Position = UDim2.new(0, 0, 0.5, 0)
+	Grab.AnchorPoint = Vector2.new(0.5, 0.5)
+	Grab.BackgroundColor3 = Color3.fromRGB(100, 150, 255)
+	Grab.BorderSizePixel = 0
+	Grab.Parent = Slider
+	
+	local GrabCorner = Instance.new("UICorner")
+	GrabCorner.CornerRadius = UDim.new(1, 0)
+	GrabCorner.Parent = Grab
+	
+	local ValueText = Instance.new("TextLabel")
+	ValueText.Name = "ValueText"
+	ValueText.Size = UDim2.new(0, 50, 1, 0)
+	ValueText.Position = UDim2.new(1, -50, 0, 0)
+	ValueText.BackgroundTransparency = 1
+	ValueText.Text = "0"
+	ValueText.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ValueText.TextSize = 12
+	ValueText.Font = Enum.Font.SourceSans
+	ValueText.TextXAlignment = Enum.TextXAlignment.Right
+	ValueText.Parent = Slider
+	
+	local SliderLabel = Instance.new("TextLabel")
+	SliderLabel.Name = "Label"
+	SliderLabel.Size = UDim2.new(1, -55, 1, 0)
+	SliderLabel.BackgroundTransparency = 1
+	SliderLabel.Text = "Slider"
+	SliderLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	SliderLabel.TextSize = 14
+	SliderLabel.Font = Enum.Font.SourceSans
+	SliderLabel.TextXAlignment = Enum.TextXAlignment.Left
+	SliderLabel.Parent = Slider
+	
+	-- Combo Prefab
+	local Combo = Instance.new("TextButton")
+	Combo.Name = "Combo"
+	Combo.Size = UDim2.new(1, 0, 0, 25)
+	Combo.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	Combo.BorderSizePixel = 0
+	Combo.Text = ""
+	Combo.Parent = Prefabs
+	
+	local ComboCorner = Instance.new("UICorner")
+	ComboCorner.CornerRadius = UDim.new(0, 4)
+	ComboCorner.Parent = Combo
+	
+	local ComboValueText = Instance.new("TextLabel")
+	ComboValueText.Name = "ValueText"
+	ComboValueText.Size = UDim2.new(1, -25, 1, 0)
+	ComboValueText.Position = UDim2.new(0, 5, 0, 0)
+	ComboValueText.BackgroundTransparency = 1
+	ComboValueText.Text = "Select..."
+	ComboValueText.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ComboValueText.TextSize = 14
+	ComboValueText.Font = Enum.Font.SourceSans
+	ComboValueText.TextXAlignment = Enum.TextXAlignment.Left
+	ComboValueText.Parent = Combo
+	
+	local ComboToggle = Instance.new("Frame")
+	ComboToggle.Name = "Toggle"
+	ComboToggle.Size = UDim2.new(0, 20, 1, 0)
+	ComboToggle.Position = UDim2.new(1, -20, 0, 0)
+	ComboToggle.BackgroundTransparency = 1
+	ComboToggle.Parent = Combo
+	
+	local ToggleButton = Instance.new("ImageButton")
+	ToggleButton.Name = "ToggleButton"
+	ToggleButton.Size = UDim2.new(0, 12, 0, 12)
+	ToggleButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+	ToggleButton.AnchorPoint = Vector2.new(0.5, 0.5)
+	ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ToggleButton.BorderSizePixel = 0
+	ToggleButton.Image = ""
+	ToggleButton.Parent = ComboToggle
+	
+	-- Keybind Prefab
+	local Keybind = Instance.new("Frame")
+	Keybind.Name = "Keybind"
+	Keybind.Size = UDim2.new(1, 0, 0, 25)
+	Keybind.BackgroundTransparency = 1
+	Keybind.Parent = Prefabs
+	
+	local KeybindLayout = Instance.new("UIListLayout")
+	KeybindLayout.FillDirection = Enum.FillDirection.Horizontal
+	KeybindLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+	KeybindLayout.HorizontalAlignment = Enum.HorizontalAlignment.SpaceBetween
+	KeybindLayout.Parent = Keybind
+	
+	local KeybindLabel = Instance.new("TextLabel")
+	KeybindLabel.Name = "Label"
+	KeybindLabel.Size = UDim2.new(0.7, 0, 1, 0)
+	KeybindLabel.BackgroundTransparency = 1
+	KeybindLabel.Text = "Keybind"
+	KeybindLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	KeybindLabel.TextSize = 14
+	KeybindLabel.Font = Enum.Font.SourceSans
+	KeybindLabel.TextXAlignment = Enum.TextXAlignment.Left
+	KeybindLabel.Parent = Keybind
+	
+	local KeybindValueText = Instance.new("TextButton")
+	KeybindValueText.Name = "ValueText"
+	KeybindValueText.Size = UDim2.new(0, 60, 0, 20)
+	KeybindValueText.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	KeybindValueText.BorderSizePixel = 0
+	KeybindValueText.Text = "None"
+	KeybindValueText.TextColor3 = Color3.fromRGB(255, 255, 255)
+	KeybindValueText.TextSize = 12
+	KeybindValueText.Font = Enum.Font.SourceSans
+	KeybindValueText.Parent = Keybind
+	
+	local KeybindCorner = Instance.new("UICorner")
+	KeybindCorner.CornerRadius = UDim.new(0, 3)
+	KeybindCorner.Parent = KeybindValueText
+	
+	-- Console Prefab
+	local Console = Instance.new("ScrollingFrame")
+	Console.Name = "Console"
+	Console.Size = UDim2.new(1, 0, 0, 200)
+	Console.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	Console.BorderSizePixel = 0
+	Console.ScrollBarThickness = 8
+	Console.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+	Console.CanvasSize = UDim2.new(0, 0, 0, 0)
+	Console.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	Console.Parent = Prefabs
+	
+	local ConsoleCorner = Instance.new("UICorner")
+	ConsoleCorner.CornerRadius = UDim.new(0, 4)
+	ConsoleCorner.Parent = Console
+	
+	local Source = Instance.new("TextBox")
+	Source.Name = "Source"
+	Source.Size = UDim2.new(1, 0, 1, 0)
+	Source.BackgroundTransparency = 1
+	Source.Text = ""
+	Source.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Source.TextSize = 12
+	Source.Font = Enum.Font.Code
+	Source.TextXAlignment = Enum.TextXAlignment.Left
+	Source.TextYAlignment = Enum.TextYAlignment.Top
+	Source.ClearTextOnFocus = false
+	Source.MultiLine = true
+	Source.Parent = Console
+	
+	local ConsolePadding = Instance.new("UIPadding")
+	ConsolePadding.PaddingLeft = UDim.new(0, 5)
+	ConsolePadding.PaddingRight = UDim.new(0, 5)
+	ConsolePadding.PaddingTop = UDim.new(0, 5)
+	ConsolePadding.PaddingBottom = UDim.new(0, 5)
+	ConsolePadding.Parent = Console
+	
+	local Lines = Instance.new("TextLabel")
+	Lines.Name = "Lines"
+	Lines.Size = UDim2.new(0, 30, 1, 0)
+	Lines.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	Lines.BorderSizePixel = 0
+	Lines.Text = "1"
+	Lines.TextColor3 = Color3.fromRGB(150, 150, 150)
+	Lines.TextSize = 12
+	Lines.Font = Enum.Font.Code
+	Lines.TextXAlignment = Enum.TextXAlignment.Center
+	Lines.TextYAlignment = Enum.TextYAlignment.Top
+	Lines.Visible = false
+	Lines.Parent = Console
+	
+	-- Table Prefab
+	local Table = Instance.new("Frame")
+	Table.Name = "Table"
+	Table.Size = UDim2.new(1, 0, 0, 200)
+	Table.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	Table.BorderSizePixel = 0
+	Table.Parent = Prefabs
+	
+	local TableCorner = Instance.new("UICorner")
+	TableCorner.CornerRadius = UDim.new(0, 4)
+	TableCorner.Parent = Table
+	
+	local TableLayout = Instance.new("UIListLayout")
+	TableLayout.FillDirection = Enum.FillDirection.Vertical
+	TableLayout.Padding = UDim.new(0, 2)
+	TableLayout.Parent = Table
+	
+	local TablePadding = Instance.new("UIPadding")
+	TablePadding.PaddingLeft = UDim.new(0, 5)
+	TablePadding.PaddingRight = UDim.new(0, 5)
+	TablePadding.PaddingTop = UDim.new(0, 5)
+	TablePadding.PaddingBottom = UDim.new(0, 5)
+	TablePadding.Parent = Table
+	
+	local RowTemp = Instance.new("Frame")
+	RowTemp.Name = "RowTemp"
+	RowTemp.Size = UDim2.new(1, 0, 0, 25)
+	RowTemp.BackgroundTransparency = 1
+	RowTemp.Visible = false
+	RowTemp.Parent = Table
+	
+	local RowLayout = Instance.new("UIListLayout")
+	RowLayout.FillDirection = Enum.FillDirection.Horizontal
+	RowLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+	RowLayout.Padding = UDim.new(0, 2)
+	RowLayout.Parent = RowTemp
+	
+	local ColumnTemp = Instance.new("Frame")
+	ColumnTemp.Name = "ColumnTemp"
+	ColumnTemp.Size = UDim2.new(0.33, 0, 1, 0)
+	ColumnTemp.BackgroundTransparency = 1
+	ColumnTemp.Visible = false
+	ColumnTemp.Parent = RowTemp
+	
+	local ColumnStroke = Instance.new("UIStroke")
+	ColumnStroke.Color = Color3.fromRGB(100, 100, 100)
+	ColumnStroke.Thickness = 1
+	ColumnStroke.Enabled = false
+	ColumnStroke.Parent = ColumnTemp
+	
+	local ColumnLayout = Instance.new("UIListLayout")
+	ColumnLayout.FillDirection = Enum.FillDirection.Vertical
+	ColumnLayout.Padding = UDim.new(0, 2)
+	ColumnLayout.Parent = ColumnTemp
+	
+	local ColumnPadding = Instance.new("UIPadding")
+	ColumnPadding.PaddingLeft = UDim.new(0, 3)
+	ColumnPadding.PaddingRight = UDim.new(0, 3)
+	ColumnPadding.PaddingTop = UDim.new(0, 2)
+	ColumnPadding.PaddingBottom = UDim.new(0, 2)
+	ColumnPadding.Parent = ColumnTemp
+	
+	-- CollapsingHeader Prefab
+	local CollapsingHeader = Instance.new("Frame")
+	CollapsingHeader.Name = "CollapsingHeader"
+	CollapsingHeader.Size = UDim2.new(1, 0, 0, 25)
+	CollapsingHeader.BackgroundTransparency = 1
+	CollapsingHeader.Parent = Prefabs
+	
+	local HeaderLayout = Instance.new("UIListLayout")
+	HeaderLayout.FillDirection = Enum.FillDirection.Vertical
+	HeaderLayout.Parent = CollapsingHeader
+	
+	local TitleBar = Instance.new("TextButton")
+	TitleBar.Name = "TitleBar"
+	TitleBar.Size = UDim2.new(1, 0, 0, 25)
+	TitleBar.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	TitleBar.BorderSizePixel = 0
+	TitleBar.Text = ""
+	TitleBar.Parent = CollapsingHeader
+	
+	local TitleBarCorner = Instance.new("UICorner")
+	TitleBarCorner.CornerRadius = UDim.new(0, 4)
+	TitleBarCorner.Parent = TitleBar
+	
+	local TitleBarLayout = Instance.new("UIListLayout")
+	TitleBarLayout.FillDirection = Enum.FillDirection.Horizontal
+	TitleBarLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+	TitleBarLayout.Padding = UDim.new(0, 5)
+	TitleBarLayout.Parent = TitleBar
+	
+	local TitleBarPadding = Instance.new("UIPadding")
+	TitleBarPadding.PaddingLeft = UDim.new(0, 5)
+	TitleBarPadding.PaddingRight = UDim.new(0, 5)
+	TitleBarPadding.Parent = TitleBar
+	
+	local HeaderToggle = Instance.new("Frame")
+	HeaderToggle.Name = "Toggle"
+	HeaderToggle.Size = UDim2.new(0, 15, 0, 15)
+	HeaderToggle.BackgroundTransparency = 1
+	HeaderToggle.Parent = TitleBar
+	
+	local HeaderToggleButton = Instance.new("ImageButton")
+	HeaderToggleButton.Name = "ToggleButton"
+	HeaderToggleButton.Size = UDim2.new(1, 0, 1, 0)
+	HeaderToggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	HeaderToggleButton.BorderSizePixel = 0
+	HeaderToggleButton.Image = ""
+	HeaderToggleButton.Parent = HeaderToggle
+	
+	local HeaderTitle = Instance.new("TextLabel")
+	HeaderTitle.Name = "Title"
+	HeaderTitle.Size = UDim2.new(1, -20, 1, 0)
+	HeaderTitle.BackgroundTransparency = 1
+	HeaderTitle.Text = "Header"
+	HeaderTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+	HeaderTitle.TextSize = 14
+	HeaderTitle.Font = Enum.Font.SourceSans
+	HeaderTitle.TextXAlignment = Enum.TextXAlignment.Left
+	HeaderTitle.Parent = TitleBar
+	
+	local ChildContainer = Instance.new("Frame")
+	ChildContainer.Name = "ChildContainer"
+	ChildContainer.Size = UDim2.new(1, -10, 0, 0)
+	ChildContainer.Position = UDim2.new(0, 5, 0, 0)
+	ChildContainer.BackgroundTransparency = 1
+	ChildContainer.AutomaticSize = Enum.AutomaticSize.Y
+	ChildContainer.Visible = false
+	ChildContainer.Parent = CollapsingHeader
+	
+	local ContainerLayout = Instance.new("UIListLayout")
+	ContainerLayout.FillDirection = Enum.FillDirection.Vertical
+	ContainerLayout.Padding = UDim.new(0, 4)
+	ContainerLayout.Parent = ChildContainer
+	
+	local ContainerPadding = Instance.new("UIPadding")
+	ContainerPadding.PaddingTop = UDim.new(0, 5)
+	ContainerPadding.PaddingBottom = UDim.new(0, 5)
+	ContainerPadding.Parent = ChildContainer
+	
+	-- SeparatorText Prefab
+	local SeparatorText = Instance.new("Frame")
+	SeparatorText.Name = "SeparatorText"
+	SeparatorText.Size = UDim2.new(1, 0, 0, 20)
+	SeparatorText.BackgroundTransparency = 1
+	SeparatorText.Parent = Prefabs
+	
+	local SeparatorLine = Instance.new("Frame")
+	SeparatorLine.Name = "Line"
+	SeparatorLine.Size = UDim2.new(1, 0, 0, 1)
+	SeparatorLine.Position = UDim2.new(0, 0, 0.5, 0)
+	SeparatorLine.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+	SeparatorLine.BorderSizePixel = 0
+	SeparatorLine.Parent = SeparatorText
+	
+	local SeparatorTextLabel = Instance.new("TextLabel")
+	SeparatorTextLabel.Name = "TextLabel"
+	SeparatorTextLabel.Size = UDim2.new(0, 100, 1, 0)
+	SeparatorTextLabel.Position = UDim2.new(0.5, 0, 0, 0)
+	SeparatorTextLabel.AnchorPoint = Vector2.new(0.5, 0)
+	SeparatorTextLabel.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	SeparatorTextLabel.BorderSizePixel = 0
+	SeparatorTextLabel.Text = ""
+	SeparatorTextLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+	SeparatorTextLabel.TextSize = 12
+	SeparatorTextLabel.Font = Enum.Font.SourceSans
+	SeparatorTextLabel.Parent = SeparatorText
+	
+	-- Row Prefab
+	local Row = Instance.new("Frame")
+	Row.Name = "Row"
+	Row.Size = UDim2.new(1, 0, 0, 25)
+	Row.BackgroundTransparency = 1
+	Row.Parent = Prefabs
+	
+	local RowUILayout = Instance.new("UIListLayout")
+	RowUILayout.FillDirection = Enum.FillDirection.Horizontal
+	RowUILayout.VerticalAlignment = Enum.VerticalAlignment.Center
+	RowUILayout.Padding = UDim.new(0, 5)
+	RowUILayout.Parent = Row
+	
+	local RowUIPadding = Instance.new("UIPadding")
+	RowUIPadding.Parent = Row
+	
+	-- ScrollBox Prefab
+	local ScrollBox = Instance.new("ScrollingFrame")
+	ScrollBox.Name = "ScrollBox"
+	ScrollBox.Size = UDim2.new(1, 0, 0, 150)
+	ScrollBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	ScrollBox.BorderSizePixel = 0
+	ScrollBox.ScrollBarThickness = 8
+	ScrollBox.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+	ScrollBox.CanvasSize = UDim2.new(0, 0, 0, 0)
+	ScrollBox.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	ScrollBox.Parent = Prefabs
+	
+	local ScrollBoxCorner = Instance.new("UICorner")
+	ScrollBoxCorner.CornerRadius = UDim.new(0, 4)
+	ScrollBoxCorner.Parent = ScrollBox
+	
+	local ScrollBoxLayout = Instance.new("UIListLayout")
+	ScrollBoxLayout.FillDirection = Enum.FillDirection.Vertical
+	ScrollBoxLayout.Padding = UDim.new(0, 4)
+	ScrollBoxLayout.Parent = ScrollBox
+	
+	local ScrollBoxPadding = Instance.new("UIPadding")
+	ScrollBoxPadding.PaddingLeft = UDim.new(0, 5)
+	ScrollBoxPadding.PaddingRight = UDim.new(0, 5)
+	ScrollBoxPadding.PaddingTop = UDim.new(0, 5)
+	ScrollBoxPadding.PaddingBottom = UDim.new(0, 5)
+	ScrollBoxPadding.Parent = ScrollBox
+	
+	-- Image Prefab
+	local Image = Instance.new("ImageButton")
+	Image.Name = "Image"
+	Image.Size = UDim2.new(1, 0, 0, 100)
+	Image.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	Image.BorderSizePixel = 0
+	Image.Image = ""
+	Image.ScaleType = Enum.ScaleType.Fit
+	Image.Parent = Prefabs
+	
+	local ImageCorner = Instance.new("UICorner")
+	ImageCorner.CornerRadius = UDim.new(0, 4)
+	ImageCorner.Parent = Image
+	
+	-- Viewport Prefab
+	local Viewport = Instance.new("Frame")
+	Viewport.Name = "Viewport"
+	Viewport.Size = UDim2.new(1, 0, 0, 200)
+	Viewport.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	Viewport.BorderSizePixel = 0
+	Viewport.Parent = Prefabs
+	
+	local ViewportCorner = Instance.new("UICorner")
+	ViewportCorner.CornerRadius = UDim.new(0, 4)
+	ViewportCorner.Parent = Viewport
+	
+	local ViewportFrame = Instance.new("ViewportFrame")
+	ViewportFrame.Name = "Viewport"
+	ViewportFrame.Size = UDim2.new(1, 0, 1, 0)
+	ViewportFrame.BackgroundTransparency = 1
+	ViewportFrame.Parent = Viewport
+	
+	local ViewportFrameCorner = Instance.new("UICorner")
+	ViewportFrameCorner.CornerRadius = UDim.new(0, 4)
+	ViewportFrameCorner.Parent = ViewportFrame
+	
+	local WorldModel = Instance.new("WorldModel")
+	WorldModel.Name = "WorldModel"
+	WorldModel.Parent = ViewportFrame
+	
+	-- Window Prefab
+	local Window = Instance.new("Frame")
+	Window.Name = "Window"
+	Window.Size = UDim2.new(0, 400, 0, 300)
+	Window.Position = UDim2.new(0.5, 0, 0.5, 0)
+	Window.AnchorPoint = Vector2.new(0.5, 0.5)
+	Window.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	Window.BorderSizePixel = 0
+	Window.Parent = Prefabs
+	
+	local WindowCorner = Instance.new("UICorner")
+	WindowCorner.CornerRadius = UDim.new(0, 6)
+	WindowCorner.Parent = Window
+	
+	local WindowStroke = Instance.new("UIStroke")
+	WindowStroke.Color = Color3.fromRGB(100, 100, 100)
+	WindowStroke.Thickness = 1
+	WindowStroke.Parent = Window
+	
+	local Content = Instance.new("Frame")
+	Content.Name = "Content"
+	Content.Size = UDim2.new(1, 0, 1, 0)
+	Content.BackgroundTransparency = 1
+	Content.Parent = Window
+	
+	local ContentLayout = Instance.new("UIListLayout")
+	ContentLayout.FillDirection = Enum.FillDirection.Vertical
+	ContentLayout.Parent = Content
+	
+	local WindowTitleBar = Instance.new("Frame")
+	WindowTitleBar.Name = "TitleBar"
+	WindowTitleBar.Size = UDim2.new(1, 0, 0, 30)
+	WindowTitleBar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	WindowTitleBar.BorderSizePixel = 0
+	WindowTitleBar.Parent = Content
+	
+	local TitleBarTopCorner = Instance.new("UICorner")
+	TitleBarTopCorner.CornerRadius = UDim.new(0, 6)
+	TitleBarTopCorner.Parent = WindowTitleBar
+	
+	local TitleBarLayout = Instance.new("UIListLayout")
+	TitleBarLayout.FillDirection = Enum.FillDirection.Horizontal
+	TitleBarLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+	TitleBarLayout.HorizontalAlignment = Enum.HorizontalAlignment.SpaceBetween
+	TitleBarLayout.Parent = WindowTitleBar
+	
+	local TitleBarLeft = Instance.new("Frame")
+	TitleBarLeft.Name = "Left"
+	TitleBarLeft.Size = UDim2.new(1, -30, 1, 0)
+	TitleBarLeft.BackgroundTransparency = 1
+	TitleBarLeft.Parent = WindowTitleBar
+	
+	local TitleBarLeftLayout = Instance.new("UIListLayout")
+	TitleBarLeftLayout.FillDirection = Enum.FillDirection.Horizontal
+	TitleBarLeftLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+	TitleBarLeftLayout.Padding = UDim.new(0, 5)
+	TitleBarLeftLayout.Parent = TitleBarLeft
+	
+	local TitleBarLeftPadding = Instance.new("UIPadding")
+	TitleBarLeftPadding.PaddingLeft = UDim.new(0, 10)
+	TitleBarLeftPadding.Parent = TitleBarLeft
+	
+	local WindowToggle = Instance.new("Frame")
+	WindowToggle.Name = "Toggle"
+	WindowToggle.Size = UDim2.new(0, 15, 0, 15)
+	WindowToggle.BackgroundTransparency = 1
+	WindowToggle.Parent = TitleBarLeft
+	
+	local WindowToggleButton = Instance.new("ImageButton")
+	WindowToggleButton.Name = "ToggleButton"
+	WindowToggleButton.Size = UDim2.new(1, 0, 1, 0)
+	WindowToggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	WindowToggleButton.BorderSizePixel = 0
+	WindowToggleButton.Image = ""
+	WindowToggleButton.Parent = WindowToggle
+	
+	local WindowTitle = Instance.new("TextLabel")
+	WindowTitle.Name = "Title"
+	WindowTitle.Size = UDim2.new(1, -20, 1, 0)
+	WindowTitle.BackgroundTransparency = 1
+	WindowTitle.Text = "Window"
+	WindowTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+	WindowTitle.TextSize = 14
+	WindowTitle.Font = Enum.Font.SourceSansBold
+	WindowTitle.TextXAlignment = Enum.TextXAlignment.Left
+	WindowTitle.Parent = TitleBarLeft
+	
+	local WindowClose = Instance.new("TextButton")
+	WindowClose.Name = "Close"
+	WindowClose.Size = UDim2.new(0, 30, 1, 0)
+	WindowClose.BackgroundTransparency = 1
+	WindowClose.Text = "×"
+	WindowClose.TextColor3 = Color3.fromRGB(255, 100, 100)
+	WindowClose.TextSize = 18
+	WindowClose.Font = Enum.Font.SourceSansBold
+	WindowClose.Parent = WindowTitleBar
+	
+	local ToolBar = Instance.new("Frame")
+	ToolBar.Name = "ToolBar"
+	ToolBar.Size = UDim2.new(1, 0, 0, 25)
+	ToolBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	ToolBar.BorderSizePixel = 0
+	ToolBar.Parent = Content
+	
+	local ToolBarLayout = Instance.new("UIListLayout")
+	ToolBarLayout.FillDirection = Enum.FillDirection.Horizontal
+	ToolBarLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+	ToolBarLayout.Padding = UDim.new(0, 2)
+	ToolBarLayout.Parent = ToolBar
+	
+	local ToolBarPadding = Instance.new("UIPadding")
+	ToolBarPadding.PaddingLeft = UDim.new(0, 5)
+	ToolBarPadding.PaddingRight = UDim.new(0, 5)
+	ToolBarPadding.Parent = ToolBar
+	
+	local TabButton = Instance.new("TextButton")
+	TabButton.Name = "TabButton"
+	TabButton.Size = UDim2.new(0, 80, 1, 0)
+	TabButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	TabButton.BorderSizePixel = 0
+	TabButton.Text = "Tab"
+	TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+	TabButton.TextSize = 12
+	TabButton.Font = Enum.Font.SourceSans
+	TabButton.Visible = false
+	TabButton.Parent = ToolBar
+	
+	local TabButtonCorner = Instance.new("UICorner")
+	TabButtonCorner.CornerRadius = UDim.new(0, 3)
+	TabButtonCorner.Parent = TabButton
+	
+	local Body = Instance.new("Frame")
+	Body.Name = "Body"
+	Body.Size = UDim2.new(1, 0, 1, -55)
+	Body.BackgroundTransparency = 1
+	Body.Parent = Content
+	
+	local Template = Instance.new("ScrollingFrame")
+	Template.Name = "Template"
+	Template.Size = UDim2.new(1, 0, 1, 0)
+	Template.BackgroundTransparency = 1
+	Template.BorderSizePixel = 0
+	Template.ScrollBarThickness = 8
+	Template.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+	Template.CanvasSize = UDim2.new(0, 0, 0, 0)
+	Template.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	Template.Visible = false
+	Template.Parent = Body
+	
+	local TemplateLayout = Instance.new("UIListLayout")
+	TemplateLayout.FillDirection = Enum.FillDirection.Vertical
+	TemplateLayout.Padding = UDim.new(0, 4)
+	TemplateLayout.Parent = Template
+	
+	local TemplatePadding = Instance.new("UIPadding")
+	TemplatePadding.PaddingLeft = UDim.new(0, 10)
+	TemplatePadding.PaddingRight = UDim.new(0, 10)
+	TemplatePadding.PaddingTop = UDim.new(0, 10)
+	TemplatePadding.PaddingBottom = UDim.new(0, 10)
+	TemplatePadding.Parent = Template
+	
+	local ResizeGrab = Instance.new("TextButton")
+	ResizeGrab.Name = "ResizeGrab"
+	ResizeGrab.Size = UDim2.new(0, 15, 0, 15)
+	ResizeGrab.Position = UDim2.new(1, -15, 1, -15)
+	ResizeGrab.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+	ResizeGrab.BorderSizePixel = 0
+	ResizeGrab.Text = ""
+	ResizeGrab.TextTransparency = 0.6
+	ResizeGrab.Parent = Window
+	
+	-- Selection Prefab (for dropdowns)
+	local Selection = Instance.new("ScrollingFrame")
+	Selection.Name = "Selection"
+	Selection.Size = UDim2.new(0, 150, 0, 100)
+	Selection.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	Selection.BorderSizePixel = 0
+	Selection.ScrollBarThickness = 6
+	Selection.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
+	Selection.CanvasSize = UDim2.new(0, 0, 0, 0)
+	Selection.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	Selection.Parent = Prefabs
+	
+	local SelectionCorner = Instance.new("UICorner")
+	SelectionCorner.CornerRadius = UDim.new(0, 4)
+	SelectionCorner.Parent = Selection
+	
+	local SelectionStroke = Instance.new("UIStroke")
+	SelectionStroke.Color = Color3.fromRGB(100, 100, 100)
+	SelectionStroke.Thickness = 1
+	SelectionStroke.Parent = Selection
+	
+	local SelectionLayout = Instance.new("UIListLayout")
+	SelectionLayout.FillDirection = Enum.FillDirection.Vertical
+	SelectionLayout.Parent = Selection
+	
+	local SelectionTemplate = Instance.new("TextButton")
+	SelectionTemplate.Name = "Template"
+	SelectionTemplate.Size = UDim2.new(1, 0, 0, 25)
+	SelectionTemplate.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+	SelectionTemplate.BorderSizePixel = 0
+	SelectionTemplate.Text = "Item"
+	SelectionTemplate.TextColor3 = Color3.fromRGB(255, 255, 255)
+	SelectionTemplate.TextSize = 12
+	SelectionTemplate.Font = Enum.Font.SourceSans
+	SelectionTemplate.Visible = false
+	SelectionTemplate.Parent = Selection
+	
+	-- ModalEffect Prefab
+	local ModalEffect = Instance.new("Frame")
+	ModalEffect.Name = "ModalEffect"
+	ModalEffect.Size = UDim2.new(1, 0, 1, 0)
+	ModalEffect.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	ModalEffect.BackgroundTransparency = 0.6
+	ModalEffect.BorderSizePixel = 0
+	ModalEffect.Parent = Prefabs
+	
+	-- Create demo rigs
+	local R15Rig = Instance.new("Model")
+	R15Rig.Name = "R15 Rig"
+	R15Rig.Parent = Prefabs
+	
+	-- Create a simple R15 rig structure
+	local Humanoid = Instance.new("Humanoid")
+	Humanoid.Parent = R15Rig
+	
+	local HumanoidRootPart = Instance.new("Part")
+	HumanoidRootPart.Name = "HumanoidRootPart"
+	HumanoidRootPart.Size = Vector3.new(2, 2, 1)
+	HumanoidRootPart.Material = Enum.Material.Plastic
+	HumanoidRootPart.BrickColor = BrickColor.new("Medium stone grey")
+	HumanoidRootPart.CanCollide = false
+	HumanoidRootPart.Anchored = true
+	HumanoidRootPart.Parent = R15Rig
+	
+	local Head = Instance.new("Part")
+	Head.Name = "Head"
+	Head.Size = Vector3.new(2, 1, 1)
+	Head.Material = Enum.Material.Plastic
+	Head.BrickColor = BrickColor.new("Light orange")
+	Head.CanCollide = false
+	Head.Parent = R15Rig
+	
+	local HeadWeld = Instance.new("WeldConstraint")
+	HeadWeld.Part0 = HumanoidRootPart
+	HeadWeld.Part1 = Head
+	HeadWeld.Parent = Head
+	Head.CFrame = HumanoidRootPart.CFrame * CFrame.new(0, 1.5, 0)
+	
 	return UI
 end
 
-local UI = ImGui:FetchUI()
+--// Create prefabs
+local UI = ImGui:CreatePrefabs()
 local Prefabs = UI.Prefabs
 ImGui.Prefabs = Prefabs
 Prefabs.Visible = false
@@ -328,11 +1113,11 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 		Instance.Visible = true
 
 		--// TODO
-		if WindowConfig.NoGradientAll then
+		if WindowConfig and WindowConfig.NoGradientAll then
 			Class.NoGradient = true
 		end
 
-		local Colors = WindowConfig.Colors
+		local Colors = WindowConfig and WindowConfig.Colors
 		ImGui:CheckStyles(Instance, Class, Colors)
 
 		--// External callback check
@@ -409,8 +1194,10 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 			Tick.ImageTransparency = 1
 			Tick.BackgroundTransparency = 0
 		else
-			Tickbox:FindFirstChildOfClass("UIPadding"):Remove()
-			Tickbox:FindFirstChildOfClass("UICorner"):Remove()
+			local padding = Tickbox:FindFirstChildOfClass("UIPadding")
+			if padding then padding:Remove() end
+			local corner = Tickbox:FindFirstChildOfClass("UICorner")
+			if corner then corner:Remove() end
 		end
 
 		--// Apply animations
@@ -518,7 +1305,7 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 		local ObjectClass = self:NewInstance(TextInput, Config)
 
 		TextBox.Text = Config.Value or ""
-		TextBox.PlaceholderText = Config.PlaceHolder
+		TextBox.PlaceholderText = Config.PlaceHolder or ""
 		TextBox.MultiLine = Config.MultiLine == true
 
 		--// Apply animations
@@ -854,10 +1641,6 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 		return self:NewInstance(Row, ContainClass)
 	end
 
-	--TODO
-	-- Vertical 
-	-- :SetPercentage
-	-- This will use UIDragdetectors in the upcoming release, please do not report this!
 	function ContainerClass:Slider(Config)
 		Config = Config or {}
 		
@@ -894,7 +1677,9 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 			local Diff = UIPadding.PaddingLeft - PaddingSides
 
 			Grab.AnchorPoint = Vector2.new(0, 0.5)
-			UIGradient.Enabled = true
+			if UIGradient then
+				UIGradient.Enabled = true
+			end
 
 			UIPadding.PaddingLeft = PaddingSides
 			UIPadding.PaddingRight = PaddingSides
@@ -903,8 +1688,8 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 		end
 
 		function Config:SetValue(Value: number, Slider: false)
-			local MinValue = Config.MinValue
-			local MaxValue = Config.MaxValue
+			local MinValue = Config.MinValue or 0
+			local MaxValue = Config.MaxValue or 100
 			local Difference = MaxValue - MinValue
 			local Percentage = (Value - MinValue) / Difference
 
@@ -957,7 +1742,9 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 			if inputObject.UserInputType ~= InputType then return end
 
 			Dragging = false
-			MouseMoveConnection:Disconnect()
+			if MouseMoveConnection then
+				MouseMoveConnection:Disconnect()
+			end
 		end
 
 		--// Connect mouse events
@@ -1010,7 +1797,7 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 		local Key = Config.Value
 		local TobeNullKey = Config.NullKey or Enum.KeyCode.Backspace
 
-		local Keybind: TextButton = Prefabs.Keybind:Clone()
+		local Keybind: Frame = Prefabs.Keybind:Clone()
 		local ValueText: TextButton = Keybind.ValueText
 
 		local ObjectClass = nil
@@ -1031,7 +1818,7 @@ function ImGui:ContainerClass(Frame: Frame, Class, Window)
 			end
 		end
 
-		Keybind.Activated:Connect(function()
+		ValueText.Activated:Connect(function()
 			ValueText.Text = "..."
 
 			local NewKey = UserInputService.InputBegan:Wait()
@@ -1456,7 +2243,7 @@ function ImGui:SetWindowProps(Properties, IgnoreWindows)
 
 	--// Collect windows & set properties
 	for Window in next, ImGui.Windows do
-		if table.find(IgnoreWindows, Window) then continue end
+		if table.find(IgnoreWindows or {}, Window) then continue end
 
 		local OldValues = {}
 		Module.OldProperties[Window] = OldValues
