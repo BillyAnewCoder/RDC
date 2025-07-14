@@ -879,12 +879,6 @@ function ImGui:CreatePrefabs()
 	return UI
 end
 
---// Create prefabs
-local UI = ImGui:CreatePrefabs()
-local Prefabs = UI.Prefabs
-ImGui.Prefabs = Prefabs
-Prefabs.Visible = false
-
 --// Styles
 local AddionalStyles = {
 	[{
